@@ -37,17 +37,29 @@ pinMode(motor_right[i], OUTPUT);
 }
 
 void loop() {
-// Wait for IR remote button press
- //if (irrecv.decode(&results)) {
- //   if (1) {  // Can check for a specific button here
- //     if (state == LOW) { 
- //       state = HIGH;  // Button pressed, so set state to HIGH
- //       digitalWrite(LEDPin, HIGH);
- //     }
- //     lastPressTime = millis();
- //   }
- //   irrecv.resume();} // Receive the next value
+ // Wait for IR remote button press
+ if (irrecv.decode(&results))//have we received an IR signal?
+
+{ 
+ translateIR();
+    irrecv.resume();} // Receive the next value
+}
+ //(END MAINLOOP)
  
+ void translateIR()  //Takes actions based on IR Code
+ {
+ switch(results.value)
+ 
+ {
+ 
+ case 0xFF30CF:  
+ enemydetection();
+ 
+ }}
+ 
+ 
+ void enemydetection(){
+ delay(3000);
  digitalWrite(trigPin, LOW); 
  delayMicroseconds(2); // 1 microsecond = 0.000001 seconds
 
@@ -60,7 +72,9 @@ void loop() {
  Serial.println(digitalRead(7));  //Commented Out
 
  //distance (in cm) based on the speed of sound.
- distance = duration/58.2;    // t = r / c c=speed of sound (340m/s), t=time, r=distance     
+  distance = duration/58.2;    // t = r / c c=speed of sound (340m/s), t=time, r=distance     
+
+
 
  if (distance >= maximumRange || distance <= minimumRange){   //if the distance is unreadable, turn the led off and print "out of range" to serial monitor
 
@@ -74,16 +88,18 @@ Serial.println("Out of range! :(");  //Commented Out
  
  turn_right();
  
+
  }
- else {
-  drive_forward();
+else  {
+
  Serial.print(distance);  //Commented Out
  Serial.println(" cm");  //Commented Out
+   drive_forward();
 
  }
 
  //Delay 50ms before next reading.
- delay(3000);
+ // delay(3000); //Not executed
 }
 
 // --------------------------------------------------------------------------- Drive
@@ -103,6 +119,8 @@ digitalWrite(motor_left[1], LOW);
 
 digitalWrite(motor_right[0], HIGH); 
 digitalWrite(motor_right[1], LOW); 
+delay(3000);
+enemydetection();
 }
 
 void drive_backward(){
@@ -127,5 +145,7 @@ digitalWrite(motor_left[1], LOW);
 
 digitalWrite(motor_right[0], LOW); 
 digitalWrite(motor_right[1], HIGH); 
+delay(10);
+enemydetection();
 }
 
