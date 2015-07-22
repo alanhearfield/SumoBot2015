@@ -30,12 +30,12 @@ digitalWrite(motor1left, HIGH);
 digitalWrite(motor2right, LOW);
 digitalWrite(motor2left, HIGH);
 }
-else if (line1 > 900 or line2 > 900){
-digitalWrite(motor1right, LOW);
-digitalWrite(motor1left, HIGH);
-digitalWrite(motor2right, HIGH);
-digitalWrite(motor2left, LOW);
-}
+//else if (line1 > 900 or line2 > 900){
+//digitalWrite(motor1right, LOW);
+//digitalWrite(motor1left, HIGH);
+//digitalWrite(motor2right, HIGH);
+//digitalWrite(motor2left, LOW);
+//}
 else {
 digitalWrite(motor1right, HIGH);
 digitalWrite(motor1left, LOW);
