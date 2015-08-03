@@ -1,13 +1,16 @@
 #include <IRremote.h>
 #include <IRremoteInt.h>
+#include <SharpIR.h>
 
-int echoPin = 8; // Echo Pin
-int trigPin = 9; // Trigger Pin
-int LEDPin = 13; // Onboard LED
+int maximumRange = 80; // Maximum range in cm
+int minimumRange = 4; 
+//long duration, distance; 
 
-int maximumRange = 200; // Maximum range in cm
-int minimumRange = 0; 
-long duration, distance; 
+//sharp ir
+#define ir A0
+#define model 1080
+
+SharpIR sharp(ir, 25, 93, model);
 
 //Motor
 int motor_left[] = {7, 6};
@@ -22,13 +25,12 @@ int IRmode = 0;
 
 #define MAX_TIME 150
 
-
+int LEDPin = 13; // Onboard LED
 
 void setup() {
  Serial.begin (9600);  //Commented Out
- pinMode(trigPin, OUTPUT);
- pinMode(echoPin, INPUT);
  pinMode(LEDPin, OUTPUT); 
+ pinMode (ir, INPUT);
 
 // Start the receiver
 irrecv.enableIRIn(); 
@@ -57,33 +59,17 @@ void loop() {
 //break;
 //case 1:
 ////}
- digitalWrite(trigPin, LOW); 
- delayMicroseconds(2); // 1 microsecond = 0.000001 seconds
 
- digitalWrite(trigPin, HIGH);
- delayMicroseconds(10); 
-
- digitalWrite(trigPin, LOW);
- duration = pulseIn(echoPin, HIGH, 3000);
-
- //distance (in cm) based on the speed of sound.
- distance = duration/58.2;    // t = r / c c=speed of sound (340m/s), t=time, r=distance     
-delay(100);
+ int dis=sharp.distance();  // this returns the distance to the object you're measuring
 
 //if the distance is unreadable, turn left until a reading is made
- if (distance >= maximumRange || distance <= minimumRange){   
+ if (dis >= maximumRange || dis <= minimumRange){   
 
  //to indicate "out of range" 
 
 Serial.println("Out of range! :(");  //Commented Out
  digitalWrite(LEDPin, LOW); 
-            delay(100);
-            pinMode(echoPin, OUTPUT);
-            digitalWrite(echoPin, LOW);
-            Serial.println("reset");
-            delay(100);
-            pinMode(echoPin, INPUT);
- 
+
 
 digitalWrite(motor_left[0], LOW); 
 digitalWrite(motor_left[1], HIGH); 
@@ -93,7 +79,7 @@ digitalWrite(motor_right[1], LOW);
  }
  else {
   //drive_forward into enemy
-  
+   digitalWrite(LEDPin, HIGH); 
 digitalWrite(motor_left[0], HIGH); 
 digitalWrite(motor_left[1], LOW); 
 
@@ -101,7 +87,7 @@ digitalWrite(motor_right[0], HIGH);
 digitalWrite(motor_right[1], LOW); 
 
 
- Serial.print(distance);  //Commented Out
+ Serial.print(dis);  //Commented Out
  Serial.println(" cm");  //Commented Out
 
  }
