@@ -2,7 +2,7 @@
 #include <IRremoteInt.h>
 #include <SharpIR.h>
 
-int maximumRange = 80; // Maximum range in cm
+int maximumRange = 70; // Maximum range in cm
 int minimumRange = 4; 
 //long duration, distance; 
 
@@ -45,20 +45,20 @@ pinMode(motor_right[i], OUTPUT);
 
 void loop() {
 
-//// Wait for IR remote button press
-//switch(IRmode)
-//{
-//case 0:
-//
-//if (irrecv.decode(&results)) {
-//  if (0xFF6897) {  // Can check for a specific button here
-//    IRmode = 1;
-//    Serial.print("ON");
-//  }
-//   irrecv.resume();} // Receive the next value
-//break;
-//case 1:
-////}
+// Wait for IR remote button press
+switch(IRmode)
+{
+case 0:
+
+if (irrecv.decode(&results)) {
+  if (0xFF6897) {  // Can check for a specific button here
+    IRmode = 1;
+    Serial.print("ON");
+  }
+   irrecv.resume();} // Receive the next value
+break;
+case 1:
+
 
  int dis=sharp.distance();  // this returns the distance to the object you're measuring
 
@@ -99,7 +99,7 @@ digitalWrite(motor_right[1], LOW);
  
  //  break;
 }
-
+}
 
 // --------------------------------------------------------------------------- Drive
 
