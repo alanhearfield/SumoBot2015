@@ -14,8 +14,10 @@ int minimumRange = 4;
 SharpIR sharp(ir, 25, 93, model);
 
 //Motor
-int motor_left[] = {7, 6};
-int motor_right[] = {5, 4};
+int rightmotorpin1 = 4; 
+int rightmotorpin2 = 5; 
+int leftmotorpin1 = 6;
+int leftmotorpin2 = 7;  
 
 // IR Reciever
 IRrecv irrecv(12); // Receive on pin 12
@@ -34,6 +36,9 @@ int sensor2 = 3;
 int reflectance1;
 int reflectance2;
 
+
+//--------------------------------------------------------------
+
 void setup() {
  Serial.begin (9600);  //Commented Out
  pinMode(LEDPin, OUTPUT); 
@@ -43,31 +48,28 @@ void setup() {
 irrecv.enableIRIn(); 
 
 // Setup motors
-int i;
-for(i = 0; i < 2; i++){
-pinMode(motor_left[i], OUTPUT);
-pinMode(motor_right[i], OUTPUT);
-}
-
-
+  pinMode(rightmotorpin1,OUTPUT);
+  pinMode(rightmotorpin2,OUTPUT);
+  pinMode(leftmotorpin1,OUTPUT);
+  pinMode(leftmotorpin2,OUTPUT);
 
 }
-
+//-------------------------------------------------------------
 void loop() {
 
-//// Wait for IR remote button press
-//switch(IRmode)
-//{
-//case 0:
-//
-//if (irrecv.decode(&results)) {
-//  if (0xFF6897) {  // Can check for a specific button here
-//    IRmode = 1;
-//    Serial.print("ON");
-//  }
-//   irrecv.resume();} // Receive the next value
-//break;
-//case 1:
+// Wait for IR remote button press
+switch(IRmode)
+{
+case 0:
+
+if (irrecv.decode(&results)) {
+  if (0xFF6897) {  // Can check for a specific button here
+    IRmode = 1;
+    Serial.print("ON");
+  }
+   irrecv.resume();} // Receive the next value
+break;
+case 1:
 
 
  edge_detect();
@@ -83,7 +85,8 @@ Serial.println("Out of range! :(");  //Commented Out
  digitalWrite(LEDPin, LOW); 
 
  turn_left();
-
+ motor_stop();
+Serial.println("Not detected"); 
  }
  else {
   //drive_forward into enemy
@@ -93,7 +96,7 @@ Serial.println("Out of range! :(");  //Commented Out
 
  Serial.print(dis);  //Commented Out
  Serial.println(" cm");  //Commented Out
-
+Serial.println("Charge"); 
  }
 
  //Delay 50ms before next reading.
@@ -103,49 +106,54 @@ Serial.println("Out of range! :(");  //Commented Out
  
  //  break;
 }
-
+}
 
 // --------------------------------------------------------------------------- Drive
 
 void motor_stop(){
-digitalWrite(motor_left[0], LOW); 
-digitalWrite(motor_left[1], LOW); 
-
-digitalWrite(motor_right[0], LOW); 
-digitalWrite(motor_right[1], LOW);
-delay(25);
+  digitalWrite(rightmotorpin1,LOW);
+  digitalWrite(rightmotorpin2,LOW);
+  
+  digitalWrite(leftmotorpin1,LOW);
+  digitalWrite(leftmotorpin2,LOW);
+//delay(25);
 }
 
 void drive_forward(){
-digitalWrite(motor_left[0], HIGH); 
-digitalWrite(motor_left[1], LOW); 
-
-digitalWrite(motor_right[0], HIGH); 
-digitalWrite(motor_right[1], LOW); 
+  Serial.println("Forward");
+  digitalWrite(rightmotorpin1,LOW);
+  digitalWrite(rightmotorpin2,HIGH);
+  
+  digitalWrite(leftmotorpin1,LOW);
+  digitalWrite(leftmotorpin2,HIGH);
 }
 
 void drive_backward(){
-digitalWrite(motor_left[0], LOW); 
-digitalWrite(motor_left[1], HIGH); 
-
-digitalWrite(motor_right[0], LOW); 
-digitalWrite(motor_right[1], HIGH); 
+  Serial.println("Backward");
+  digitalWrite(rightmotorpin1,HIGH);
+  digitalWrite(rightmotorpin2,LOW);
+  
+  digitalWrite(leftmotorpin1,HIGH);
+  digitalWrite(leftmotorpin2,LOW);
 }
 
 void turn_left(){
-digitalWrite(motor_left[0], LOW); 
-digitalWrite(motor_left[1], HIGH); 
-
-digitalWrite(motor_right[0], HIGH); 
-digitalWrite(motor_right[1], LOW);
+  Serial.println("Left");
+  digitalWrite(rightmotorpin1,LOW);
+  digitalWrite(rightmotorpin2,HIGH);
+  
+  digitalWrite(leftmotorpin1,HIGH);
+  digitalWrite(leftmotorpin2,LOW);
+  delay(50);
 }
 
 void turn_right(){
-digitalWrite(motor_left[0], HIGH); 
-digitalWrite(motor_left[1], LOW); 
-
-digitalWrite(motor_right[0], LOW); 
-digitalWrite(motor_right[1], HIGH); 
+  Serial.println("Right");
+  digitalWrite(rightmotorpin1,HIGH);
+  digitalWrite(rightmotorpin2,LOW);
+  
+  digitalWrite(leftmotorpin1,LOW);
+  digitalWrite(leftmotorpin2,HIGH);
 }
 
 void edge_detect()
