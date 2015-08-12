@@ -28,13 +28,13 @@ int IRmode = 0;
 
 #define MAX_TIME 150
 
-//int LEDPin = 13; // Onboard LED
-
 //QTR-RC Sensors
 int sensor1 = 2;  
 int sensor2 = 3;
 int reflectance1;
 int reflectance2;
+
+//LED Lights Array
 
 int timer = 50;           // The higher the number, the slower the timing.
 int ledPins[] = { 
@@ -56,8 +56,10 @@ irrecv.enableIRIn();
   pinMode(rightmotorpin2,OUTPUT);
   pinMode(leftmotorpin1,OUTPUT);
   pinMode(leftmotorpin2,OUTPUT);
-  
-//  digitalWrite(1,LOW);
+ 
+//LED Brightness for some reason  
+ pinMode(13,OUTPUT); 
+ digitalWrite(13,LOW);
 
 
   // the array elements are numbered from 0 to (pinCount - 1).
@@ -74,19 +76,15 @@ void loop() {
 switch(IRmode)
 {
 case 0:
-{
+
 if (irrecv.decode(&results)) {
   if (0xFF6897) {  // Can check for a specific button here
-    IRmode = 1;}
-       irrecv.resume(); // Receive the next value
-//  else if (0xFF9867) {
-//    IRmode = 2;
-////    Serial.print("ON");
-//  }
-   irrecv.resume();}} // Receive the next value
+    IRmode = 1;
+  }
+       irrecv.resume();} // Receive the next value
+
 break;
 case 1:
-{
 
  edge_detect();
 
@@ -97,26 +95,16 @@ case 1:
 
  //to indicate "out of range" 
 
-//Serial.println("Out of range! :(");  //Commented Out
-// digitalWrite(LEDPin, LOW); 
-
  turn_left();
  delay(50);
  motor_stop();
-//Serial.println("Not detected"); 
  }
  else {
   //drive_forward into enemy
-//   digitalWrite(LEDPin, HIGH); 
 
  drive_forward();
-
  light_array();
   
-
-// Serial.print(dis);  //Commented Out
-// Serial.println(" cm");  //Commented Out
-//Serial.println("Charge"); 
  }
 
  //Delay 50ms before next reading.
@@ -124,17 +112,10 @@ case 1:
  
  
 }
- break;
+// break;
 
 
-case 2:
-{drive_forward();
-edge_detect();
-light_array();
-}
-break;
 
-}
 }
 
 // --------------------------------------------------------------------------- Drive
@@ -147,7 +128,7 @@ void motor_stop(){
   digitalWrite(leftmotorpin2,LOW);
 //delay(25);
 }
-
+//--------------------------------------------------------------------------
 void drive_forward(){
 //  Serial.println("Forward");
   digitalWrite(rightmotorpin1,LOW);
@@ -156,7 +137,7 @@ void drive_forward(){
   digitalWrite(leftmotorpin1,LOW);
   digitalWrite(leftmotorpin2,HIGH);
 }
-
+//--------------------------------------------------------------------------
 void drive_backward(){
 //  Serial.println("Backward");
   digitalWrite(rightmotorpin1,HIGH);
@@ -165,7 +146,7 @@ void drive_backward(){
   digitalWrite(leftmotorpin1,HIGH);
   digitalWrite(leftmotorpin2,LOW);
 }
-
+//--------------------------------------------------------------------------
 void turn_left(){
 //  Serial.println("Left");
   digitalWrite(rightmotorpin1,LOW);
@@ -174,7 +155,7 @@ void turn_left(){
   digitalWrite(leftmotorpin1,HIGH);
   digitalWrite(leftmotorpin2,LOW);
 }
-
+//--------------------------------------------------------------------------
 void turn_right(){
 //  Serial.println("Right");
   digitalWrite(rightmotorpin1,HIGH);
@@ -183,7 +164,7 @@ void turn_right(){
   digitalWrite(leftmotorpin1,LOW);
   digitalWrite(leftmotorpin2,HIGH);
 }
-
+//---------------------------------------------------------------------------
 void edge_detect()
  
 {
@@ -235,7 +216,7 @@ void edge_detect()
   delay(100);
    
 }
-
+//------------------------------------------------------------------------
 void light_array()
 {
   // loop from the lowest pin to the highest:
