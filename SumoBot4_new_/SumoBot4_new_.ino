@@ -28,7 +28,7 @@ int IRmode = 0;
 
 #define MAX_TIME 150
 
-int LEDPin = 13; // Onboard LED
+//int LEDPin = 13; // Onboard LED
 
 //QTR-RC Sensors
 int sensor1 = 2;  
@@ -41,7 +41,7 @@ int reflectance2;
 
 void setup() {
  Serial.begin (9600);  //Commented Out
- pinMode(LEDPin, OUTPUT); 
+// pinMode(LEDPin, OUTPUT); 
  pinMode (ir, INPUT);
 
 // Start the receiver
@@ -52,6 +52,9 @@ irrecv.enableIRIn();
   pinMode(rightmotorpin2,OUTPUT);
   pinMode(leftmotorpin1,OUTPUT);
   pinMode(leftmotorpin2,OUTPUT);
+  
+  pinMode(1,OUTPUT);
+  digitalWrite(1,LOW);
 
 }
 //-------------------------------------------------------------
@@ -82,15 +85,16 @@ case 1:
  //to indicate "out of range" 
 
 Serial.println("Out of range! :(");  //Commented Out
- digitalWrite(LEDPin, LOW); 
+// digitalWrite(LEDPin, LOW); 
 
  turn_left();
+ delay(50);
  motor_stop();
 Serial.println("Not detected"); 
  }
  else {
   //drive_forward into enemy
-   digitalWrite(LEDPin, HIGH); 
+//   digitalWrite(LEDPin, HIGH); 
 
  drive_forward();
 
@@ -144,7 +148,6 @@ void turn_left(){
   
   digitalWrite(leftmotorpin1,HIGH);
   digitalWrite(leftmotorpin2,LOW);
-  delay(50);
 }
 
 void turn_right(){
@@ -177,7 +180,10 @@ void edge_detect()
   
   if (reflectance1 < 20){
       drive_backward();
-            Serial.println("Edge detected");   
+      delay(300);
+      turn_right();
+      delay(300);
+            Serial.println("Sensor 1 Edge detected");   
   }
       else {
         Serial.println(reflectance1);       
@@ -192,7 +198,10 @@ void edge_detect()
   
   if (reflectance2 < 20){
       drive_backward();
-              Serial.println("Edge detected");     
+            delay(300);
+      turn_left();
+      delay(300);
+              Serial.println("Sensor 2 Edge detected");     
   }
       else {
         Serial.println(reflectance1);       
