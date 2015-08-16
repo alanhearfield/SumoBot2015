@@ -60,7 +60,7 @@ irrecv.enableIRIn();
  
 //LED Brightness for some reason  
  pinMode(13,OUTPUT); 
- digitalWrite(13,LOW);
+
 
 
   // the array elements are numbered from 0 to (pinCount - 1).
@@ -72,7 +72,7 @@ irrecv.enableIRIn();
 }
 //-------------------------------------------------------------
 void loop() {
-
+ digitalWrite(13,LOW);
 // Wait for IR remote button press
 switch(IRmode)
 {
@@ -111,9 +111,12 @@ while(var < 1){
   //drive_forward into enemy
 
  drive_forward();
+
  light_array();
   
 } 
+
+ delay(50);
 }
 }
 

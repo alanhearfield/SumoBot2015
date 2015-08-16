@@ -62,7 +62,7 @@ irrecv.enableIRIn();
  
 //LED Brightness for some reason  
  pinMode(13,OUTPUT); 
- digitalWrite(13,LOW);
+
 
 
   // the array elements are numbered from 0 to (pinCount - 1).
@@ -74,7 +74,7 @@ irrecv.enableIRIn();
 }
 //-------------------------------------------------------------
 void loop() {
-
+ digitalWrite(13,LOW);
 // Wait for IR remote button press
 switch(IRmode)
 {
@@ -116,14 +116,31 @@ while(var < 1){
  Serial.println(" cm");  //Commented Out
  
  drive_forward();
- light_array();
+  delay(50);
+ motor_stop();
+
+ int dis=sharp.distance();
+  if (dis >= maximumRange || dis <= minimumRange){  
+ //to indicate "out of range" 
+ Serial.println("Out of range! :(");  //Commented Out
+ turn_left();
+ delay(50);
+ motor_stop();
+ }
+ else {
+  //drive_forward into enemy
+ Serial.print(dis);  //Commented Out
+ Serial.println(" cm");  //Commented Out
+ 
+ drive_forward();
+// light_array();
   
  }
 
  //Delay 50ms before next reading.
 // delay(50);
  
- 
+ }
 }
 // break;
 
@@ -181,7 +198,7 @@ void turn_right(){
 void edge_detect()
  
 {
- Serial.println("Edge Detect");
+// Serial.println("Edge Detect");
   reflectance1 = 1;   //initialize value to 1 at the beginning of each loop
   reflectance2 = 1;
   pinMode(sensor1, OUTPUT);   //set pin as output
@@ -202,10 +219,10 @@ void edge_detect()
       delay(300);
       turn_right();
       delay(300);
-//            Serial.println("Sensor 1 Edge detected");   
+            Serial.println("Sensor 1 Edge detected");   
   }
       else {
-//        Serial.println(reflectance1);       
+        Serial.println(reflectance1);       
       }
 
   pinMode(sensor2, INPUT);                                          //set pin as input
@@ -220,10 +237,10 @@ void edge_detect()
             delay(300);
       turn_left();
       delay(300);
-//              Serial.println("Sensor 2 Edge detected");     
+              Serial.println("Sensor 2 Edge detected");     
   }
       else {
-//        Serial.println(reflectance1);       
+        Serial.println(reflectance2);       
       }
        
 //  delay(100);
