@@ -2,9 +2,11 @@
 #include <IRremoteInt.h>
 
 #include <SharpIR.h>
+//#include <QTRSensors.h>
 
 int maximumRange = 45; // Maximum range in cm
 int minimumRange = 4; 
+//long duration, distance; 
 
 //sharp ir
 #define ir A0
@@ -40,13 +42,13 @@ int ledPins[] = {
   0, 1, 8, 9, 10, 11 };       // an array of pin numbers to which LEDs are attached
 int pinCount = 6;           // the number of pins (i.e. the length of the array)
 
-//Initial get away from the edge
 int var = 0;
 
 //--------------------------------------------------------------
 
 void setup() {
-
+ Serial.begin (9600);  //Commented Out
+// pinMode(LEDPin, OUTPUT); 
  pinMode (ir, INPUT);
 
 // Start the receiver
@@ -81,19 +83,20 @@ case 0:
 if (irrecv.decode(&results)) {
   if (0xFF6897) {  // Can check for a specific button here
     IRmode = 1;
+
+   
   }
        irrecv.resume();} // Receive the next value
 
 break;
 case 1:
 
-// Initial get away from the edge (only run once)
 while(var < 1){
   drive_forward();
   delay(300);
   var++;
+  Serial.println("Get away from the edge");
 }
-
  edge_detect();
 
  int dis=sharp.distance();  // this returns the distance to the object you're measuring
@@ -102,19 +105,30 @@ while(var < 1){
  if (dis >= maximumRange || dis <= minimumRange){   
 
  //to indicate "out of range" 
-
+ Serial.println("Out of range! :(");  //Commented Out
  turn_left();
  delay(50);
  motor_stop();
  }
  else {
   //drive_forward into enemy
-
+ Serial.print(dis);  //Commented Out
+ Serial.println(" cm");  //Commented Out
+ 
  drive_forward();
  light_array();
   
-} 
+ }
+
+ //Delay 50ms before next reading.
+// delay(50);
+ 
+ 
 }
+// break;
+
+
+
 }
 
 // --------------------------------------------------------------------------- Drive
@@ -125,9 +139,11 @@ void motor_stop(){
   
   digitalWrite(leftmotorpin1,LOW);
   digitalWrite(leftmotorpin2,LOW);
+//delay(25);
 }
 //--------------------------------------------------------------------------
 void drive_forward(){
+//  Serial.println("Forward");
   digitalWrite(rightmotorpin1,LOW);
   digitalWrite(rightmotorpin2,HIGH);
   
@@ -136,6 +152,7 @@ void drive_forward(){
 }
 //--------------------------------------------------------------------------
 void drive_backward(){
+//  Serial.println("Backward");
   digitalWrite(rightmotorpin1,HIGH);
   digitalWrite(rightmotorpin2,LOW);
   
@@ -144,6 +161,7 @@ void drive_backward(){
 }
 //--------------------------------------------------------------------------
 void turn_left(){
+//  Serial.println("Left");
   digitalWrite(rightmotorpin1,LOW);
   digitalWrite(rightmotorpin2,HIGH);
   
@@ -152,6 +170,7 @@ void turn_left(){
 }
 //--------------------------------------------------------------------------
 void turn_right(){
+//  Serial.println("Right");
   digitalWrite(rightmotorpin1,HIGH);
   digitalWrite(rightmotorpin2,LOW);
   
@@ -162,7 +181,7 @@ void turn_right(){
 void edge_detect()
  
 {
- 
+ Serial.println("Edge Detect");
   reflectance1 = 1;   //initialize value to 1 at the beginning of each loop
   reflectance2 = 1;
   pinMode(sensor1, OUTPUT);   //set pin as output
@@ -183,9 +202,10 @@ void edge_detect()
       delay(300);
       turn_right();
       delay(300);
+//            Serial.println("Sensor 1 Edge detected");   
   }
       else {
-   
+//        Serial.println(reflectance1);       
       }
 
   pinMode(sensor2, INPUT);                                          //set pin as input
@@ -200,9 +220,13 @@ void edge_detect()
             delay(300);
       turn_left();
       delay(300);
-    }
+//              Serial.println("Sensor 2 Edge detected");     
+  }
       else {
+//        Serial.println(reflectance1);       
       }
+       
+//  delay(100);
    
 }
 //------------------------------------------------------------------------
@@ -226,3 +250,4 @@ void light_array()
     digitalWrite(ledPins[thisPin], LOW);
   }
 }
+
