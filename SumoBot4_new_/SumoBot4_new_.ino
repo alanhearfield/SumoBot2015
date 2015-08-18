@@ -115,8 +115,6 @@ while(var < 1){
  light_array();
   
 } 
-
- delay(50);
 }
 }
 

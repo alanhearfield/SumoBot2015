@@ -14,7 +14,7 @@ int IRmode = 0;
 #define ir A0
 #define model 1080
 SharpIR sharp(ir, 25, 93, model);
-int maximumRange = 45; // Maximum range in cm
+int maximumRange = 10; // Maximum range in cm
 int minimumRange = 4; 
 
 //Motor
@@ -32,9 +32,6 @@ int reflectance2;
 //Enemy detection count
 int detect = 101;
 
-//Initial get away setting
-int getaway = 0;
-
 //LED Lights Array
 
 int timer = 0;           // The higher the number, the slower the timing.
@@ -42,9 +39,9 @@ int ledPins[] = {
   0, 1, 8, 9, 10, 11 };       // an array of pin numbers to which LEDs are attached
 int pinCount = 6;           // the number of pins (i.e. the length of the array)
 
-//--------------------------------------------------------------------------
+
 void setup() {
-// Serial.begin (9600);  //Commented Out
+ Serial.begin (9600);  //Commented Out
 
 // Setup motors
   pinMode(rightmotorpin1,OUTPUT);
@@ -68,7 +65,7 @@ irrecv.enableIRIn();
   
 }
 }
-//--------------------------------------------------------------------------
+
 void loop()
 {
 //Set TX/RX lights to off
@@ -89,7 +86,7 @@ if (irrecv.decode(&results)) {
 
 break;
 case 1:
-  get_away_from_the_edge();
+//  forward(10);
   enemy_detection();
   /* avoid the edges */
   line_right();
@@ -112,8 +109,8 @@ detect_left();
  else {
   //drive_forward into enemy
   lights_on();
-// Serial.print(dis);  //Commented Out
-// Serial.println(" cm");  //Commented Out
+ Serial.print(dis);  //Commented Out
+ Serial.println(" cm");  //Commented Out
  
  forward(10);
  detect = 0;
@@ -121,21 +118,21 @@ detect_left();
 //--------------------------------------------------------------------------
 void detect_left(){
        //to indicate "out of range" 
-// Serial.println("Detecting left");  //Commented Out
-// Serial.println("Out of range! :(");  //Commented Out
+ Serial.println("Detecting left");  //Commented Out
+ Serial.println("Out of range! :(");  //Commented Out
  left(10);
  detect++;
-// Serial.print(detect);
+ Serial.print(detect);
   }
 
   //--------------------------------------------------------------------------
 void detect_right(){
    //to indicate "out of range" 
-//    Serial.println("Detecting Right");  //Commented Out
-// Serial.println("Out of range! :(");  //Commented Out
+    Serial.println("Detecting Right");  //Commented Out
+ Serial.println("Out of range! :(");  //Commented Out
  right(20);
  detect++;
-//  Serial.print(detect);
+  Serial.print(detect);
 }
 
 //--------------------------------------------------------------------------
@@ -153,7 +150,7 @@ pinMode(sensor1, INPUT);                                          //set pin as i
   } 
   if (reflectance1 < 20){
 //                    Serial.println(reflectance1);  
-//                    Serial.println("Sensor 1 Edge detected");  
+                    Serial.println("Sensor 1 Edge detected");  
     reverse(400);
     right(500);
     detect = 0;
@@ -178,7 +175,7 @@ pinMode(sensor2, INPUT);                                          //set pin as i
   }
   if (reflectance2 < 20){
 //                    Serial.println(reflectance2); 
-//                Serial.println("Sensor 2 Edge detected");  
+                Serial.println("Sensor 2 Edge detected");  
     reverse(400);
     left(500);
     detect = 100;
@@ -250,18 +247,8 @@ void lights_on(){
 void lights_off(){
     // loop from the lowest pin to the highest:
   for (int thisPin = 0; thisPin < pinCount; thisPin++) { 
-    // turn the pin off:
+    // turn the pin on:
     digitalWrite(ledPins[thisPin], LOW);   
     delay(timer); 
 }}
-//--------------------------------------------------------------------------
-
-void get_away_from_the_edge() {
-// Initial get away from the edge (only run once)
-while(getaway < 1){
-  forward(400);
-  getaway++;
-}}
-
-//--------------------------------------------------------------------------
 
