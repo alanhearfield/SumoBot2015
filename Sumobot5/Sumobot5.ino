@@ -75,17 +75,15 @@ void loop()
 {
 	//Set TX/RX lights to off
 	digitalWrite(13, LOW);
-
+lights_off();
 	//Wait for IR command
 	switch (IRmode)
 	{
 		case 0:
 			if (irrecv.decode(&results)) {
 				if (0xFF6897) {  // Can check for a specific button here
-					IRmode = 1;
-				}
-				irrecv.resume();
-			} // Receive the next value
+					IRmode = 1;}
+				irrecv.resume();} // Receive the next value
 
 			break;
 		case 1:
@@ -100,45 +98,36 @@ void loop()
 
 void enemy_detection(){
 	int dis = sharp.distance();
-	if (dis >= maximumRange || dis <= minimumRange){
-		lights_off();
-		if (detect < 100){
+            while (dis < maximumRange){
+              lights_on(); 
+              forward(10);
+              detect = 0;
+              dis = sharp.distance();
+              line_right();
+              line_left();
+
+}
+
+ lights_off();
+if (detect < 100){
 			detect_right();
 		}
 		else if (detect >= 100) {
 			detect_left();
-			// motor_stop();
-		}
-	}
-	else 
-	{
-		//drive_forward into enemy
-		lights_on();
-		// Serial.print(dis);  //Commented Out
-		// Serial.println(" cm");  //Commented Out
-
-		forward(10);
-		detect = 0;
-	}
+}
 }
 //--------------------------------------------------------------------------
 void detect_left(){
-	//to indicate "out of range" 
-	// Serial.println("Detecting left");  //Commented Out
-	// Serial.println("Out of range! :(");  //Commented Out
 	left(10);
 	detect++;
-	// Serial.print(detect);
+
 }
 
 //--------------------------------------------------------------------------
 void detect_right(){
-	//to indicate "out of range" 
-	//    Serial.println("Detecting Right");  //Commented Out
-	// Serial.println("Out of range! :(");  //Commented Out
 	right(20);
 	detect++;
-	//  Serial.print(detect);
+
 }
 
 //--------------------------------------------------------------------------
@@ -247,22 +236,25 @@ void right(int time){
 
 //--------------------------------------------------------------------------
 void lights_on(){
-	// loop from the lowest pin to the highest:
-	for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-		// turn the pin on:
-		digitalWrite(ledPins[thisPin], HIGH);
-		delay(timer);
-	}
+  
+  digitalWrite(0,HIGH);
+  digitalWrite(1,HIGH);
+  digitalWrite(8,HIGH);
+  digitalWrite(9,HIGH);
+  digitalWrite(10,HIGH);
+  digitalWrite(11,HIGH);
+  
 }
 
 //--------------------------------------------------------------------------
 void lights_off(){
-	// loop from the lowest pin to the highest:
-	for (int thisPin = 0; thisPin < pinCount; thisPin++) {
-		// turn the pin off:
-		digitalWrite(ledPins[thisPin], LOW);
-		delay(timer);
-	}
+  digitalWrite(0,LOW);
+  digitalWrite(1,HIGH);
+  digitalWrite(8,LOW);
+  digitalWrite(9,LOW);
+  digitalWrite(10,HIGH);
+  digitalWrite(11,LOW);
+
 }
 //--------------------------------------------------------------------------
 
@@ -274,5 +266,4 @@ void get_away_from_the_edge() {
 	}
 }
 
-//--------------------------------------------------------------------------
 

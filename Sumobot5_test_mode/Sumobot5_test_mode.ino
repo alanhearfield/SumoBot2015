@@ -14,7 +14,7 @@ int IRmode = 0;
 #define ir A0
 #define model 1080
 SharpIR sharp(ir, 25, 93, model);
-int maximumRange = 10; // Maximum range in cm
+int maximumRange = 45; // Maximum range in cm
 int minimumRange = 4; 
 
 //Motor
@@ -31,6 +31,9 @@ int reflectance2;
 
 //Enemy detection count
 int detect = 101;
+
+//Initial get away setting
+int getaway = 0;
 
 //LED Lights Array
 
@@ -70,7 +73,7 @@ void loop()
 {
 //Set TX/RX lights to off
 digitalWrite(13,LOW);
-
+lights_off();
 //Wait for IR command
   switch(IRmode)
 {
@@ -86,35 +89,38 @@ if (irrecv.decode(&results)) {
 
 break;
 case 1:
-//  forward(10);
-  enemy_detection();
-  /* avoid the edges */
-  line_right();
-  line_left(); 
+			get_away_from_the_edge();
+			enemy_detection();
+			/* avoid the edges */
+			line_right();
+			line_left();
 }
 }
 //--------------------------------------------------------------------------
 void enemy_detection(){
-int dis=sharp.distance();
-  if (dis >= maximumRange || dis <= minimumRange){  
-    lights_off();
-if (detect < 100){
-detect_right();
+	int dis = sharp.distance();
+Serial.print(dis);
+Serial.println(" cm");
+            while (dis < maximumRange){
+              lights_on(); 
+              forward(10);
+              detect = 0;
+              dis = sharp.distance();
+              Serial.print(dis);
+              Serial.println(" cm");
+              line_right();
+              line_left();
+
 }
-else if(detect >= 100) {
-detect_left();
-// motor_stop();
- }
- }
- else {
-  //drive_forward into enemy
-  lights_on();
- Serial.print(dis);  //Commented Out
- Serial.println(" cm");  //Commented Out
- 
- forward(10);
- detect = 0;
-}}
+
+ lights_off();
+if (detect < 100){
+			detect_right();
+		}
+		else if (detect >= 100) {
+			detect_left();
+}
+}
 //--------------------------------------------------------------------------
 void detect_left(){
        //to indicate "out of range" 
@@ -236,19 +242,32 @@ void right(int time){
 
 //--------------------------------------------------------------------------
 void lights_on(){
-    // loop from the lowest pin to the highest:
-  for (int thisPin = 0; thisPin < pinCount; thisPin++) { 
-    // turn the pin on:
-    digitalWrite(ledPins[thisPin], HIGH);   
-    delay(timer); 
-}}
+  
+  digitalWrite(0,HIGH);
+  digitalWrite(1,HIGH);
+  digitalWrite(8,HIGH);
+  digitalWrite(9,HIGH);
+  digitalWrite(10,HIGH);
+  digitalWrite(11,HIGH);
+  
+}
 
 //--------------------------------------------------------------------------
 void lights_off(){
-    // loop from the lowest pin to the highest:
-  for (int thisPin = 0; thisPin < pinCount; thisPin++) { 
-    // turn the pin on:
-    digitalWrite(ledPins[thisPin], LOW);   
-    delay(timer); 
-}}
+  digitalWrite(0,LOW);
+  digitalWrite(1,HIGH);
+  digitalWrite(8,LOW);
+  digitalWrite(9,LOW);
+  digitalWrite(10,HIGH);
+  digitalWrite(11,LOW);
 
+}
+//--------------------------------------------------------------------------
+
+void get_away_from_the_edge() {
+	// Initial get away from the edge (only run once)
+	while (getaway < 1){
+		forward(400);
+		getaway++;
+	}
+}
