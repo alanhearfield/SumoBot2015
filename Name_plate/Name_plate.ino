@@ -1,9 +1,14 @@
-int red = 4;
+
 int green = 2;
 int yellow = 3;
-int buttongreen = 7;
-int buttonyellow = 8;
-int buttonred = 9;
+int red = 4;
+
+int blue1 = 6;
+int blue2 = 7;
+
+int buttongreen = 8;
+int buttonyellow = 9;
+int buttonred = 10;
 
 int buttongreenstate = 0;
 int buttonyellowstate = 0;
@@ -12,29 +17,39 @@ int buttonredstate = 0;
 int lightmode = 1;
 
 void setup() {
+  
+//   Serial.begin (9600);  //Commented Out
+   
  pinMode(2,OUTPUT); 
-  pinMode(4,OUTPUT);
   pinMode(3,OUTPUT);
-  pinMode(7,INPUT);
+  pinMode(4,OUTPUT);
+  pinMode(6,OUTPUT);
+  pinMode(7,OUTPUT);
+  pinMode(13,OUTPUT);
+
   pinMode(8,INPUT);
   pinMode(9,INPUT);
+  pinMode(10,INPUT);
 }
 
 void loop()  {
-buttongreenstate = digitalRead(buttongreen);
+  digitalWrite(13,LOW);
+  digitalWrite(6,HIGH);
+  digitalWrite(7,HIGH);
+  buttongreenstate = digitalRead(buttongreen);
   buttonyellowstate = digitalRead(buttonyellow);
   buttonredstate = digitalRead(buttonred);
   if (buttongreenstate == HIGH) {
     lightmode = 1;
-        Serial.println(lightmode);
+//        Serial.println(lightmode);
   }
   else if(buttonyellowstate == HIGH) {
     lightmode = 2;
-        Serial.println(lightmode);
+//        Serial.println(lightmode);
   }
   else if (buttonredstate == HIGH) {
     lightmode = 3;
-    Serial.println(lightmode);
+//    Serial.println(lightmode);
   }
   else {}
 
@@ -52,19 +67,22 @@ buttongreenstate = digitalRead(buttongreen);
 }
 //**************************************
 void redlight()  {
-  digitalWrite(2,LOW);
-  digitalWrite(3,LOW);
- digitalWrite(4,HIGH); 
+//  Serial.println("RED");
+  digitalWrite(2,HIGH);
+  digitalWrite(3,HIGH);
+ digitalWrite(4,LOW); 
 }
 //**************************************
 void greenlight()  {
-  digitalWrite(4,LOW);
-  digitalWrite(3,LOW);
- digitalWrite(2,HIGH); 
+//  Serial.println("GREEN");
+  digitalWrite(4,HIGH);
+  digitalWrite(3,HIGH);
+ digitalWrite(2,LOW); 
 }
 //**************************************
 void yellowlight()  {
-  digitalWrite(2,LOW);
-  digitalWrite(4,LOW);
- digitalWrite(3,HIGH); 
+//    Serial.println("YELLOW");
+  digitalWrite(2,HIGH);
+  digitalWrite(4,HIGH);
+ digitalWrite(3,LOW); 
 }
