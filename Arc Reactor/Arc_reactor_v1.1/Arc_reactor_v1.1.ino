@@ -1,3 +1,12 @@
+// Pin Config
+// Blue - Ground
+// Orange - Pin 11
+// Brown/White - Pin 3
+// Green/White - Pin 5
+// Brown - Pin 6
+// Green - Pin 9
+// Orange/White - Pin 10
+// Blue/White - Not used
 
 // Initialize Variables
 int blinkCycle = 0;
